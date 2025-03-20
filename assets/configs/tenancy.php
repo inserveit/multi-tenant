@@ -46,6 +46,9 @@ return [
         // The hostname actions middleware (redirects, https, maintenance).
         \Hyn\Tenancy\Middleware\HostnameActions::class,
     ],
+    'environment' => [
+        'run-installed-check' => true,
+    ],
     'website' => [
         /**
          * Each website has a short random hash that identifies this entity

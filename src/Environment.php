@@ -57,6 +57,10 @@ class Environment
 
     public function installed(): bool
     {
+        if (! config('tenancy.environment.run-installed-check', true) ) {
+            return true;
+        }
+
         $isInstalled = function (): bool {
             /** @var \Illuminate\Database\Connection $connection */
             $connection = $this->app->make(Connection::class)->system();

@@ -27,9 +27,11 @@ interface WebsiteRepository
 
     /**
      * @param string|int $id
+     * @param bool       $useCache
      * @return Website|null
      */
-    public function findById($id);
+    public function findById($id, bool $useCache = false);
+
     /**
      * @param Website $website
      * @return Website

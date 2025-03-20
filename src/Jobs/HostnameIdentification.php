@@ -16,6 +16,7 @@ namespace Hyn\Tenancy\Jobs;
 
 use Hyn\Tenancy\Contracts\Hostname;
 use Hyn\Tenancy\Contracts\Repositories\HostnameRepository;
+use Hyn\Tenancy\Contracts\Repositories\WebsiteRepository;
 use Hyn\Tenancy\Events;
 use Hyn\Tenancy\Traits\DispatchesEvents;
 use Illuminate\Http\Request;
@@ -25,11 +26,13 @@ class HostnameIdentification
     use DispatchesEvents;
 
     /**
-     * @param Request $request
+     * @param Request            $request
      * @param HostnameRepository $hostnameRepository
+     * @param WebsiteRepository  $websiteRepository
+     *
      * @return Hostname|null
      */
-    public function handle(Request $request, HostnameRepository $hostnameRepository)
+    public function handle(Request $request, HostnameRepository $hostnameRepository, WebsiteRepository $websiteRepository)
     {
         $hostname = env('TENANCY_CURRENT_HOSTNAME');
 
@@ -46,8 +49,14 @@ class HostnameIdentification
         }
 
         $this->emitEvent(new Events\Hostnames\Identified($hostname));
+        if (!$hostname || ! $hostname->website_id) {
+            $this->emitEvent(new Events\Websites\NoneFound($request));
 
-        if (optional($hostname)->website) {
+            return $hostname;
+        }
+
+        $hostname->website = $websiteRepository->findById($hostname->website_id, true);
+        if ($hostname->website) {
             $this->emitEvent(new Events\Websites\Identified($hostname->website, $hostname));
         } else {
             $this->emitEvent(new Events\Websites\NoneFound($request));

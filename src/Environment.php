@@ -57,7 +57,8 @@ class Environment
 
     public function installed(): bool
     {
-        if (! config('tenancy.environment.run-installed-check', true) ) {
+        if (!$this->app->runningUnitTests() &&
+            !config('tenancy.environment.run-installed-check', true) ) {
             return true;
         }
 
@@ -87,8 +88,10 @@ class Environment
 
             return $hostname;
         });
-        // needed, does not work without it in laravel 12, but does in 10 (don't know why)
-        $this->app->make(CurrentHostname::class);
+
+        if ($this->app->resolved(CurrentHostname::class)) {
+            $this->app->make(CurrentHostname::class);
+        }
     }
 
     /**

@@ -42,10 +42,12 @@ class TenancyProvider extends ServiceProvider
         );
 
 
-        $this->app->booted(function ($app) {
-            $app->singleton(Environment::class, function ($app) {
+        $this->app->booted(static function ($app) {
+            $app->singleton(Environment::class, static function ($app) {
                 return new Environment($app);
             });
+
+            resolve(Environment::class);
         });
         $this->app->singleton(Contracts\Repositories\HostnameRepository::class, Repositories\HostnameRepository::class);
         $this->app->singleton(Contracts\Repositories\WebsiteRepository::class, Repositories\WebsiteRepository::class);

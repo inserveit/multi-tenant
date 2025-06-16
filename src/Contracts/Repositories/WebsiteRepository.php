@@ -54,4 +54,10 @@ interface WebsiteRepository
      * @return Builder
      */
     public function query(): Builder;
+
+    /**
+     * @param Website $website
+     * @return void
+     */
+    public function flushCache(Website $website): void;
 }

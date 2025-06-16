@@ -73,11 +73,9 @@ class WebsiteRepository implements Contract
     public function findById($id, bool $useCache = false)
     {
         if ($useCache) {
-            $model = $this->cache->remember("tenancy.website.$id", config('tenancy.website.cache'), function () use ($id) {
-                return $this->query()->find($id) ?? 'none';
+            return $this->cache->remember("tenancy.website.$id", config('tenancy.website.cache'), function () use ($id) {
+                return $this->query()->find($id);
             });
-
-            return $model === 'none' ? null : $model;
         }
 
         return $this->query()->find($id);
@@ -176,5 +174,16 @@ class WebsiteRepository implements Contract
     public function query(): Builder
     {
         return $this->website->newQuery();
+    }
+
+    /**
+     * @param Website $website
+     *
+     * @return void
+     */
+    public function flushCache(Website $website): void
+    {
+        $this->cache->forget("tenancy.website.{$website->id}");
+        $this->cache->forget("tenancy.website.{$website->uuid}");
     }
 }

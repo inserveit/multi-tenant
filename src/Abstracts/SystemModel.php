@@ -15,9 +15,22 @@
 namespace Hyn\Tenancy\Abstracts;
 
 use Hyn\Tenancy\Traits\UsesSystemConnection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class SystemModel extends Model
 {
     use UsesSystemConnection;
+
+    /**
+    * Laravel 13 resolves collection classes recursively through model parents.
+    * Because this base model is abstract, recursion can try to instantiate it.
+    * Returning null keeps the default Eloquent collection without parent recursion.
+    *
+    * @return class-string<Collection>|null
+    */
+    public function resolveCollectionFromAttribute()
+    {
+        return null;
+    }
 }

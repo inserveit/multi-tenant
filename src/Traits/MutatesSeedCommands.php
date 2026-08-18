@@ -35,6 +35,12 @@ trait MutatesSeedCommands
         parent::__construct($resolver);
 
         $this->setName('tenancy:' . $this->getName());
+        $this->addOption(
+            'website_id',
+            null,
+            InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
+            'The tenancy website_ids (not uuid) to migrate specifically.'
+        );
 
         $this->websites = app(WebsiteRepository::class);
         $this->connection = app(Connection::class);

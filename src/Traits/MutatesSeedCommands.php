@@ -17,6 +17,7 @@ namespace Hyn\Tenancy\Traits;
 use Hyn\Tenancy\Contracts\Repositories\WebsiteRepository;
 use Hyn\Tenancy\Database\Connection;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
+use Symfony\Component\Console\Input\InputOption;
 
 trait MutatesSeedCommands
 {
